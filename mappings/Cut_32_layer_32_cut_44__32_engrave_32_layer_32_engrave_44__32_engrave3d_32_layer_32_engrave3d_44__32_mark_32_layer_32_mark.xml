@@ -1,0 +1,130 @@
+<com.t__oster.visicut.model.mapping.MappingSet serialization="custom">
+  <unserializable-parents/>
+  <linked-list>
+    <default/>
+    <int>4</int>
+    <mapping>
+      <a class="filters" serialization="custom">
+        <unserializable-parents/>
+        <linked-list>
+          <default/>
+          <int>1</int>
+          <filter>
+            <compare>false</compare>
+            <inverted>false</inverted>
+            <attribute>Group</attribute>
+            <value class="string">cut</value>
+          </filter>
+        </linked-list>
+        <filters>
+          <default>
+            <multiselectEnabled>false</multiselectEnabled>
+          </default>
+        </filters>
+      </a>
+      <b class="vectorProfile">
+        <DPI>500.0</DPI>
+        <description>Cut through the material</description>
+        <name>cut</name>
+        <orderStrategy>INNER_FIRST</orderStrategy>
+        <useOutline>false</useOutline>
+        <isCut>true</isCut>
+        <width>0.7</width>
+      </b>
+    </mapping>
+    <mapping>
+      <a class="filters" serialization="custom">
+        <unserializable-parents/>
+        <linked-list>
+          <default/>
+          <int>1</int>
+          <filter>
+            <compare>false</compare>
+            <inverted>false</inverted>
+            <attribute>Group</attribute>
+            <value class="string">engrave</value>
+          </filter>
+        </linked-list>
+        <filters>
+          <default>
+            <multiselectEnabled>false</multiselectEnabled>
+          </default>
+        </filters>
+      </a>
+      <b class="rasterProfile">
+        <DPI>200.0</DPI>
+        <description>Engrave</description>
+        <name>engrave</name>
+        <invertColors>false</invertColors>
+        <colorShift>0</colorShift>
+        <ditherAlgorithm class="com.t_oster.liblasercut.dithering.FloydSteinberg">
+          <progress>99</progress>
+        </ditherAlgorithm>
+      </b>
+    </mapping>
+	 <mapping>
+      <a class="filters" serialization="custom">
+        <unserializable-parents/>
+        <linked-list>
+          <default/>
+          <int>1</int>
+          <filter>
+            <compare>false</compare>
+            <inverted>false</inverted>
+            <attribute>Group</attribute>
+            <value class="string">engrave 3d</value>
+          </filter>
+        </linked-list>
+        <filters>
+          <default>
+            <multiselectEnabled>false</multiselectEnabled>
+          </default>
+        </filters>
+      </a>
+      <b class="raster3dProfile">
+        <DPI>200.0</DPI>
+        <description>Engrave 3d</description>
+        <name>Engrave 3d</name>
+        <invertColors>false</invertColors>
+        <colorShift>0</colorShift>
+        <ditherAlgorithm class="com.t_oster.liblasercut.dithering.FloydSteinberg">
+          <progress>99</progress>
+        </ditherAlgorithm>
+      </b>
+    </mapping>
+    <mapping>
+      <a class="filters" serialization="custom">
+        <unserializable-parents/>
+        <linked-list>
+          <default/>
+          <int>1</int>
+          <filter>
+            <compare>false</compare>
+            <inverted>false</inverted>
+            <attribute>Group</attribute>
+            <value class="string">mark</value>
+          </filter>
+        </linked-list>
+        <filters>
+          <default>
+            <multiselectEnabled>false</multiselectEnabled>
+          </default>
+        </filters>
+      </a>
+      <b class="vectorProfile">
+        <DPI>500.0</DPI>
+        <description>Engrave along lines</description>
+        <name>mark</name>
+        <orderStrategy>NEAREST</orderStrategy>
+        <useOutline>false</useOutline>
+        <isCut>true</isCut>
+        <width>1.0</width>
+      </b>
+  </linked-list>
+  <com.t__oster.visicut.model.mapping.MappingSet>
+    <default>
+      <description>A new created mapping</description>
+      <name>Cut layer cut, engrave layer engrave, engrave 3d layer engrave 3d, mark layer mark</name>
+    </default>
+  </com.t__oster.visicut.model.mapping.MappingSet>
+</com.t__oster.visicut.model.mapping.MappingSet>

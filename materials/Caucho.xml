@@ -1,0 +1,11 @@
+<material>
+  <description></description>
+  <thumbnailPath>Caucho.png</thumbnailPath>
+  <engraveColor>#000000</engraveColor>
+  <cutColor>#ff0000</cutColor>
+  <color>#cccccc</color>
+  <name>Caucho</name>
+  <materialThicknesses>
+    <float>0.5</float>
+  </materialThicknesses>
+</material>

@@ -1,0 +1,30 @@
+<laserDevice>
+  <jobSentText>Job was sent as &apos;$jobname&apos;
+Please:
+-Close the lid
+-Turn on the Ventilation
+-And press &apos;start&apos; on the Lasercutter $name</jobSentText>
+  <jobPrefix>visicut </jobPrefix>
+  <laserCutter class="com.t_oster.liblasercut.drivers.LaosCutter">
+    <supportsFrequency>false</supportsFrequency>
+    <supportsFocus>false</supportsFocus>
+    <supportsPurge>false</supportsPurge>
+    <supportsVentilation>false</supportsVentilation>
+    <debugFilename></debugFilename>
+    <addSpacePerRasterLine>40.0</addSpacePerRasterLine>
+    <useTftp>true</useTftp>
+    <flipXaxis>false</flipXaxis>
+    <flipYaxis>false</flipYaxis>
+    <hostname>192.168.123.111</hostname>
+    <port>69</port>
+    <mmPerStep>0.001</mmPerStep>
+    <currentPower>-1.0</currentPower>
+    <currentSpeed>-1.0</currentSpeed>
+    <currentFrequency>-1</currentFrequency>
+    <currentFocus>0.0</currentFocus>
+    <bedWidth>900.0</bedWidth>
+    <bedHeight>600.0</bedHeight>
+  </laserCutter>
+  <thumbnailPath>BCN3D_32_IGNIS.png</thumbnailPath>
+  <name>BCN3D IGNIS</name>
+</laserDevice>

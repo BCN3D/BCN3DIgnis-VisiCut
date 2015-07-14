@@ -1,0 +1,10 @@
+<rasterProfile>
+  <DPI>200.0</DPI>
+  <description>Engrave</description>
+  <name>engrave</name>
+  <invertColors>false</invertColors>
+  <colorShift>54</colorShift>
+  <ditherAlgorithm class="com.t_oster.liblasercut.dithering.FloydSteinberg">
+    <progress>99</progress>
+  </ditherAlgorithm>
+</rasterProfile>

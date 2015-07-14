@@ -1,0 +1,11 @@
+<material>
+  <description></description>
+  <thumbnailPath>Tela.png</thumbnailPath>
+  <engraveColor>#000000</engraveColor>
+  <cutColor>#ff0000</cutColor>
+  <color>#70b8ff</color>
+  <name>Tela</name>
+  <materialThicknesses>
+    <float>3.0</float>
+  </materialThicknesses>
+</material>

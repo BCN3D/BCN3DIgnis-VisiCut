@@ -1,0 +1,14 @@
+/build/
+/nbproject/private/
+/dist/
+/distribute/VisiCut*.zip
+/distribute/*.deb
+/distribute/*.exe
+/distribute/*.pkg.tar.xz
+/distribute/linux/*.pkg.tar.xz
+/distribute/linux/pkg
+/distribute/linux/src
+/distribute/linux/PKGBUILD-tmp
+/distribute/visicut/
+/distribute/VisiCut.app/
+/settings/

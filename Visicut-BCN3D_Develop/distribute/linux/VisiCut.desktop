@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=VisiCut
+Comment=A userfriendly tool to create, save and send Jobs to a Lasercutter
+Icon=visicut
+Exec=visicut %F
+Terminal=false
+Type=Application
+Categories=Graphics;VectorGraphics;GTK;
+MimeType=image/vnd.dxf;image/svg+xml;image/x-eps;image/jpeg;image/png;application/x-plf;application/x-ls;
+StartupNotify=true

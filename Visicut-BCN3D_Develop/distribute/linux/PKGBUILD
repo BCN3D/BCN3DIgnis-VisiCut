@@ -1,0 +1,37 @@
+# Maintainer: Thomas Oster <thomas.oster@rwth-aachen.de>
+pkgname=visicut
+pkgver=VERSION
+pkgrel=1
+pkgdesc="A userfriendly tool to create, save and send Jobs to a Lasercutter"
+arch=(any)
+url="http://visicut.org"
+license=('LGPL')
+groups=()
+depends=('java-environment' 'bash' 'potrace')
+makedepends=('apache-ant')
+provides=(visicut)
+conflicts=(visicut)
+replaces=()
+backup=()
+options=()
+install=install
+source=(plf-mime.xml ls-mime.xml)
+noextract=()
+md5sums=('023d09901b9075e86821a23953e82710'
+'daeabc0ae9054e49f0154f5d2f57a700')
+
+_gitroot=../../../
+
+build() {
+  cd "$srcdir"
+  cd ../../../
+  make
+}
+
+package() {
+  cd "$srcdir"
+  cd ../../../
+  make DESTDIR="$pkgdir/" install
+  cp "$srcdir/ls-mime.xml" "$pkgdir/usr/share/visicut/"
+  cp "$srcdir/plf-mime.xml" "$pkgdir/usr/share/visicut/"
+}

@@ -312,7 +312,62 @@ public class Helper
 
   public static void installIllustratorScript() throws IOException
   {
-    String errors = "";
+    if (Helper.isWindows())
+    {
+      File src = new File(getIllustratorScript(), "illustrator_script");
+    if (!src.exists() || !src.isDirectory())
+    {
+      throw new FileNotFoundException("Not a directory: "+src);
+    }
+    File trg = null;
+    if (isWindowsXP())
+    {
+        trg = new File(new File(FileUtils.getUserDirectory(), ".inkscape"), "extensions");
+    }
+    else if (isWindows())
+    {
+        trg = new File (new File (new File (new File(new File(new File (System.getenv("systemdrive"), "Program Files"), "Adobe"), "Adobe Illustrator CC 2015"), "Presets"), "es_ES"), "Secuencias de comandos");
+    }
+    else
+    {
+      trg = new File (new File (new File(new File(new File (System.getenv("/"), "Aplicaciones"), "Adobe Illustrator CC 2015"), "Presets"), "es_ES"), "Secuencias de comandos");
+    }
+
+    if (!trg.exists() && !trg.mkdirs())
+    {
+      throw new FileNotFoundException("Can't create directory: "+trg);
+    }
+    for (File f :src.listFiles())
+    {
+      if ("OpenWithVisiCut.vbs".equals(f.getName()))
+      {
+        File target = new File(trg, "OpenWithVisiCut.vbs");
+        BufferedReader r = new BufferedReader(new FileReader(f));
+        BufferedWriter w = new BufferedWriter(new FileWriter(target));
+        String line = r.readLine();
+        while (line != null)
+        {
+          if ("VISICUTDIR=\"\"".equals(line))
+          {
+            line = "VISICUTDIR=r\""+getVisiCutFolder().getAbsolutePath()+"\"";
+          }
+          w.write(line);
+          w.newLine();
+          line = r.readLine();
+        }
+        w.flush();
+        w.close();
+        r.close();
+      }
+      else if (f.getName().toLowerCase().endsWith("vbs"))
+      {
+        FileUtils.copyFileToDirectory(f, trg);
+      }
+    }
+    }
+    else
+    {
+      String errors = "";
     for (File dir : new File[]{
       new File("/Applications/Adobe Illustrator CS3/Presets"),
       new File("/Applications/Adobe Illustrator CS4/Presets"),
@@ -351,6 +406,7 @@ public class Helper
     if (!"".equals(errors))
     {
       throw new IOException(errors);
+    }
     }
   }
 
@@ -666,12 +722,34 @@ public class Helper
 
   private static File getIllustratorScript()
   {
-    return new File(new File(getVisiCutFolder(), "illustrator_script"), "OpenWithVisiCut.scpt");
+    if (Helper.isWindows())
+    {
+       try
+    {
+      String path = Helper.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+      if (path == null)
+      {
+        return null;
+      }
+      String decodedPath = URLDecoder.decode(path, "UTF-8");
+      File folder = new File(decodedPath);
+      return folder.isDirectory() ? folder : folder.getParentFile();
+    }
+    catch (UnsupportedEncodingException ex)
+    {
+      Logger.getLogger(Helper.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return null;
+    }
+    else
+    {
+      return new File(new File(getVisiCutFolder(), "illustrator_script"), "OpenWithVisiCut.scpt");
+    }
   }
 
   public static boolean isIllustratorScriptInstallable()
   {
-    return isMacOS() && getIllustratorScript().exists();
+    return (isMacOS() || isWindows()) && getIllustratorScript().exists();
   }
 
   public static String allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-";

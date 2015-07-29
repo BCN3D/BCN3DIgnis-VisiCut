@@ -373,7 +373,9 @@ public class Helper
       new File("/Applications/Adobe Illustrator CS4/Presets"),
       new File("/Applications/Adobe Illustrator CS5/Presets"),
       new File("/Applications/Adobe Illustrator CS4/Presets.localized"),
-      new File("/Applications/Adobe Illustrator CS5/Presets.localized")
+      new File("/Applications/Adobe Illustrator CS5/Presets.localized"),
+      new File("/Applications/Adobe Illustrator CC 2014/Presets.localized"),
+      new File("/Applications/Adobe Illustrator CC 2015/Presets.localized")
     })
     {
       if (dir.exists() && dir.isDirectory())
@@ -384,9 +386,9 @@ public class Helper
           {
             continue;
           }
-          if (!"Scripts".equals(d.getName()))
+          if (!"Secuencias de comandos".equals(d.getName()))
           {
-            d = new File(d, "Scripts");
+            d = new File(d, "Secuencias de comandos");
             if (!d.exists() || !d.isDirectory())
             {
               continue;

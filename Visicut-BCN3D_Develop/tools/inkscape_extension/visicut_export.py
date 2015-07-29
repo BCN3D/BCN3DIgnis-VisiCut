@@ -52,9 +52,26 @@ if (sys.platform == "win32"):
         # the relevant line looks like:
         #  >rdp-tcp#0         Fablab                   12  Aktiv   rdpwd               
         # where "12" is the ID.
-        query=Popen(["query", "session"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        query_output=query.communicate()[0]
-        
+		
+        def querySession():
+            query=Popen(["query", "session"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            return query.communicate()[0]
+        try:
+            query_output=querySession()
+        except WindowsError:
+            # as if this is not easy enough, we have to invoke some black magic to make this work with 32bit python on 64bit windows
+            # (query.exe lives in Windows/System32 folder, but access to this is redirected to the Syswow64 folder for 32bit applications, where no query.exe exists!)
+            # https://mail.python.org/pipermail/python-win32/2009-June/009263.html
+            import ctypes
+            k32 = ctypes.windll.kernel32
+            wow64 = ctypes.c_long( 0 )
+            # disable system32 redirection
+            k32.Wow64DisableWow64FsRedirection( ctypes.byref(wow64) )
+            # do what we want
+            query_output=querySession()
+            # re-enable system32 redirection
+            k32.Wow64EnableWow64FsRedirection( wow64 )
+          
         id=None
         for line in query_output.splitlines():
             if line.startswith(">"): # current session
@@ -65,9 +82,14 @@ if (sys.platform == "win32"):
         assert 0 < id < 1000
         SINGLEINSTANCEPORT += 2 + id
 
-# if Visicut or Inkscape cannot be found, change these lines here to VISICUTBIN="C:/Programs/Visicut" or wherever you installed it.
-VISICUTBIN=None
-INKSCAPEBIN=None
+# if Visicut or Inkscape cannot be found, change these lines here to VISICUTDIR="C:/Programs/Visicut" or wherever you installed it.
+# please use forward slashes (/), not backslashes (\).
+#
+# example:
+# VISICUTDIR="C:/Program Files (x86)/VisiCut/"
+# INKSCAPEDIR="C:/Program Files (x86)/Inkscape/"
+VISICUTDIR="C:/Program Files (x86)/VisiCut-BCN3D/"
+INKSCAPEDIR=""
 
 #wether to add (true) or replace (false) current visicut's content
 IMPORT="true"
@@ -79,7 +101,9 @@ for arg in sys.argv[1:]:
   if len(arg) >= 5 and arg[0:5] == "--id=":
    elements +=[arg[5:]]
   elif len(arg) >= 13 and arg[0:13] == "--visicutbin=":
-   VISICUTBIN=arg[13:]
+   # unused
+   pass
+   #VISICUTBIN=arg[13:]
   elif len(arg) >= 9 and arg[0:9] == "--import=":
    IMPORT=arg[9:]
   else:
@@ -89,12 +113,14 @@ for arg in sys.argv[1:]:
 
 # find executable in the PATH
 def which(program, extraPaths=[]):
-    pathlist=os.environ["PATH"].split(os.pathsep)+[""]
+    pathlist = extraPaths + os.environ["PATH"].split(os.pathsep) + [""]
     if "nt" in os.name: # Windows
         if not program.lower().endswith(".exe"):
             program += ".exe"
-        pathlist.append(os.environ.get("ProgramFiles","C:\Program Files\\"))
-        pathlist.append(os.environ.get("ProgramFiles(x86)","C:\Program Files (x86)\\"))
+        programfiles=os.environ.get("ProgramFiles","C:\\Program Files\\")
+        programfiles86=os.environ.get("ProgramFiles(x86)","C:\\Program Files (x86)\\")
+        # also look in %ProgramFiles%/yourProgram/yourProgram.exe
+        pathlist+= [programfiles+"\\"+program+"\\", programfiles86+"\\"+program+"\\"]
     def is_exe(fpath):
         return os.path.isfile(fpath) and (os.access(fpath, os.X_OK) or fpath.endswith(".exe"))
     for path in pathlist:
@@ -102,10 +128,10 @@ def which(program, extraPaths=[]):
       if is_exe(exe_file):
         return exe_file
     raise Exception("Cannot find executable {0} in PATH={1}.\n\n"
-                    "Please make sure inkscape and visicut are in your PATH."
-                    "Otherwise set VISICUTBIN and INKSCAPEBIN in "
-                    "visicut_export.py in your inkscape extension directory."
-                    .format(str(program), str(pathlist)))
+                    "Please report this bug on https://github.com/t-oster/VisiCut/issues\n\n"
+                    "For a quick fix: Set VISICUTDIR and INKSCAPEDIR in "
+                    "{2}"
+                    .format(str(program), str(pathlist), os.path.realpath(__file__)))
 
 #def removeAllButThem(element, elements):
 # if element.get('id') in elements:
@@ -154,7 +180,7 @@ def stripSVG_inkscape(src,dest,elements):
  # currently this only works with gui  because of a bug in inkscape: https://bugs.launchpad.net/inkscape/+bug/843260
  hidegui=[]
  
- command = [INKSCAPEBIN]+hidegui+[dest,"--verb=UnlockAllInAllLayers","--verb=UnhideAllInAllLayers"] + selection + ["--verb=EditSelectAllInAllLayers","--verb=EditUnlinkClone","--verb=ObjectToPath","--verb=FileSave","--verb=FileClose"]
+ command = [INKSCAPEBIN]+hidegui+[dest,"--verb=UnlockAllInAllLayers","--verb=UnhideAllInAllLayers"] + selection + ["--verb=EditSelectAllInAllLayers","--verb=EditUnlinkClone","--verb=ObjectToPath","--verb=FileSave","--verb=FileQuit"]
  inkscape_output="(not yet run)"
  try:
   # run inkscape, buffer output
@@ -178,10 +204,14 @@ def stripSVG_inkscape(src,dest,elements):
  
 
 # find executable paths
-if not VISICUTBIN:
-    VISICUTBIN=which("visicut")
-if not INKSCAPEBIN:
-    INKSCAPEBIN=which("inkscape")
+import platform
+if platform.system() == 'Darwin':
+    VISICUTBIN=which("VisiCut.MacOS",[VISICUTDIR])
+elif "nt" in os.name: # Windows
+    VISICUTBIN=which("VisiCut-BCN3D.exe",[VISICUTDIR])
+else:
+    VISICUTBIN=which("VisiCut.Linux",[VISICUTDIR])
+INKSCAPEBIN=which("inkscape",[INKSCAPEDIR])
 
 # remove all non-selected elements and convert inkscape-specific elements (text-to-path etc.)
 stripSVG_inkscape(src=filename,dest=filename+".svg",elements=elements)
@@ -221,4 +251,4 @@ try:
   cmd=[VISICUTBIN]+arguments+[filename+".svg"]
   Popen(cmd,creationflags=creationflags,close_fds=close_fds)
 except:
-  sys.stderr.write("Can not start VisiCut ("+str(sys.exc_info()[0])+"). Please start manually or change the VISICUTBIN variable in the Inkscape-Extension script\n")
+  sys.stderr.write("Can not start VisiCut ("+str(sys.exc_info()[0])+"). Please start manually or change the VISICUTDIR variable in the Inkscape-Extension script\n")

@@ -89,7 +89,7 @@ if (sys.platform == "win32"):
 # VISICUTDIR="C:/Program Files (x86)/VisiCut/"
 # INKSCAPEDIR="C:/Program Files (x86)/Inkscape/"
 VISICUTDIR="C:/Program Files (x86)/VisiCut-BCN3D/"
-VISICUTDIRMACOS=r"/Applications/VisiCut-BCN3D/Contents/Resources/Java"
+VISICUTDIRMACOS=r"/Applications/VisiCut-BCN3D.app/Contents/Resources/Java"
 INKSCAPEDIR=""
 
 #wether to add (true) or replace (false) current visicut's content
